@@ -25,7 +25,12 @@ public class Table {
     @Column(name = "number_table", nullable = false)
     private String numberTable;
 
-    @Column(name = "qr_code", unique = true, nullable = false)
+    @Column(
+            name = "qr_code",
+            nullable = false,
+            unique = true,
+            length = 2048
+    )
     private String qrCode;
 
     @Column(nullable = false)

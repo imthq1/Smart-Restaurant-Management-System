@@ -29,23 +29,21 @@ public class TableService {
         table.setNumberTable(request.getNumberTable());
         table.setCapacity(request.getCapacity());
         table.setStatus("AVAILABLE");
-
-        // Generate QR code token
-        String qrToken = securityUtil.createAcessToken(request.getNumberTable());
-        table.setQrCode(qrToken);
-
+        String qrCodeImage = qrCodeService.generateTableQRCode(request.getNumberTable());
+        table.setQrCode(qrCodeImage);
         Table savedTable = tableRepository.save(table);
+
         return mapToResponse(savedTable);
     }
-
+    public void deleteTable(Integer tableId) {
+        tableRepository.deleteById(tableId);
+    }
     @Transactional
     public TableResponse generateQRCode(String numberTable) throws WriterException, IOException {
         Table table = tableRepository.findByNumberTable(numberTable)
                 .orElseThrow(() -> new RuntimeException("Table not found"));
-
-        // Generate new QR code
-        String qrToken = securityUtil.createAcessToken(numberTable);
-        table.setQrCode(qrToken);
+        String qrCodeImage = qrCodeService.generateTableQRCode(table.getNumberTable());
+        table.setQrCode(qrCodeImage);
 
         Table updatedTable = tableRepository.save(table);
 
@@ -74,7 +72,7 @@ public class TableService {
 
     private TableResponse mapToResponse(Table table) throws WriterException, IOException {
         // Generate QR code image từ token
-        String qrCodeImage = qrCodeService.generateTableQRCode(table.getNumberTable());
+
 
         TableResponse response = new TableResponse();
         response.setId(table.getId());
@@ -82,7 +80,6 @@ public class TableService {
         response.setCapacity(table.getCapacity());
         response.setStatus(table.getStatus());
         response.setQrCode(table.getQrCode());
-        response.setQrCodeImage(qrCodeImage);
         response.setCreatedAt(table.getCreatedAt());
 
         return response;

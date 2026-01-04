@@ -20,7 +20,7 @@ public class QRCodeService {
     public QRCodeService(SecurityUtil securityUtil) {
         this.securityUtil = securityUtil;
     }
-    @Value("${app.frontend.url:http://localhost:3000}")
+    @Value("${app.frontend.url:http://localhost:5173}")
     private String frontendUrl;
 
     public String generateQRCodeBase64(String data, int width, int height) throws WriterException, IOException {

@@ -26,10 +26,10 @@ public class TableController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/{id}/qr-code")
-    public ResponseEntity<TableResponse> generateNewQRCode(@PathVariable String idTable)
+    @PostMapping("/qr-code")
+    public ResponseEntity<TableResponse> generateNewQRCode(@RequestParam(name = "idTable") String TenBan)
             throws WriterException, IOException {
-        TableResponse response = tableService.generateQRCode(idTable);
+        TableResponse response = tableService.generateQRCode(TenBan);
         return ResponseEntity.ok(response);
     }
 
@@ -46,4 +46,10 @@ public class TableController {
         List<TableResponse> tables = tableService.getAllTablesWithQR();
         return ResponseEntity.ok(tables);
     }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteTable(@PathVariable int id){
+        tableService.deleteTable(id);
+        return ResponseEntity.noContent().build();
+    }
+
 }

@@ -12,7 +12,6 @@ public class TableResponse {
     private String numberTable;
     private int capacity;
     private String status;
-    private String qrCode; // Token string
-    private String qrCodeImage; // Base64 encoded PNG image
+    private String qrCode;
     private Instant createdAt;
 }
