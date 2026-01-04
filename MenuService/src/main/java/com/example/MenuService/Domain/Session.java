@@ -1,5 +1,6 @@
 package com.example.MenuService.Domain;
 
+import com.example.MenuService.Util.Enum.SessionStatus;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -29,8 +30,8 @@ public class Session {
     @Column(name = "ended_at")
     private Instant endedAt;
 
-    @Column(nullable = false)
-    private String status; // ACTIVE, COMPLETED, CANCELLED
+    @Enumerated(EnumType.STRING)
+    private SessionStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "table_id", nullable = false)
@@ -43,7 +44,7 @@ public class Session {
             startedAt = Instant.now();
         }
         if (status == null) {
-            status = "ACTIVE";
+            status = SessionStatus.ACTIVE;
         }
     }
 }

@@ -35,6 +35,46 @@ public class SecurityUtil {
 
     public SecurityUtil( ) {
     }
+    public String createTableAccessToken(int tableId, int sessionId) {
+
+        Instant now = Instant.now();
+        Instant expiry = now.plus(accessTokenExpiration, ChronoUnit.SECONDS);
+
+        JwtClaimsSet claims = JwtClaimsSet.builder()
+                .issuedAt(now)
+                .expiresAt(expiry)
+                .subject("TABLE_ORDER")
+                .claim("tableId", tableId)
+                .claim("sessionId", sessionId)
+                .claim("role", "TABLE")
+                .build();
+
+        JwsHeader jwsHeader = JwsHeader.with(JWT_ALGORITH).build();
+
+        return jwtEncoder.encode(
+                JwtEncoderParameters.from(jwsHeader, claims)
+        ).getTokenValue();
+    }
+
+    public String createTableRefreshToken(int sessionId) {
+
+        Instant now = Instant.now();
+        Instant expiry = now.plus(refreshTokenExpiration, ChronoUnit.SECONDS);
+
+        JwtClaimsSet claims = JwtClaimsSet.builder()
+                .issuedAt(now)
+                .expiresAt(expiry)
+                .subject("TABLE_REFRESH")
+                .claim("sessionId", sessionId)
+                .build();
+
+        JwsHeader jwsHeader = JwsHeader.with(JWT_ALGORITH).build();
+
+        return jwtEncoder.encode(
+                JwtEncoderParameters.from(jwsHeader, claims)
+        ).getTokenValue();
+    }
+
     public String createAcessToken(String numberTable)
     {
         Instant now = Instant.now();

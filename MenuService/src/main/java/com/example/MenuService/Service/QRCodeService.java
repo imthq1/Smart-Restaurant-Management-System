@@ -33,16 +33,17 @@ public class QRCodeService {
 
         return Base64.getEncoder().encodeToString(qrCodeBytes);
     }
-
+    public String generateTokenforTable(String numberTable)
+    {
+        return securityUtil.createAcessToken(numberTable);
+    }
 
      //Generate QR code cho table với URL động
-     public String generateTableQRCode(String tableNumber) throws WriterException, IOException {
-         String token = securityUtil.createAcessToken(tableNumber);
+     public String generateTableQRCode(int QrCode) throws WriterException, IOException {
 
          String qrContent =
                  frontendUrl +
-                         "/menu?table=" + tableNumber +
-                         "&token=" + token;
+                         "/menu?table=" + QrCode;
 
 
          return generateQRCodeBase64(qrContent, 300, 300);

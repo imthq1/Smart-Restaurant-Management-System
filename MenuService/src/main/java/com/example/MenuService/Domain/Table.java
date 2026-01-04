@@ -27,7 +27,6 @@ public class Table {
 
     @Column(
             name = "qr_code",
-            nullable = false,
             unique = true,
             length = 2048
     )

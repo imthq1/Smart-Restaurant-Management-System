@@ -27,9 +27,9 @@ public class TableController {
     }
 
     @PostMapping("/qr-code")
-    public ResponseEntity<TableResponse> generateNewQRCode(@RequestParam(name = "idTable") String TenBan)
+    public ResponseEntity<TableResponse> generateNewQRCode(@RequestParam(name = "idTable") int idTable)
             throws WriterException, IOException {
-        TableResponse response = tableService.generateQRCode(TenBan);
+        TableResponse response = tableService.generateQRCode(idTable);
         return ResponseEntity.ok(response);
     }
 
