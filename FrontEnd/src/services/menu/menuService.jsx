@@ -1,6 +1,19 @@
 import axiosClient from "../../utils/api";
 import { ProductModel } from "../../models/ProductModel";
 
+export const getProductsWith = async (params = {}) => {
+  try {
+    const response = await axiosClient.get("/api/v1/items", { params });
+
+    const rawData = response.data.data;
+    if (Array.isArray(rawData)) {
+      return rawData.map((item) => new ProductModel(item));
+    }
+    return [];
+  } catch (error) {
+    throw error.response?.data?.message || "Lỗi lấy danh sách món";
+  }
+};
 export const getProducts = async () => {
   try {
     const response = await axiosClient.get(`/api/v1/items`);

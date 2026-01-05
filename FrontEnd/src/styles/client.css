@@ -1,0 +1,188 @@
+/* src/styles/client.css */
+:root {
+  --primary-orange: #fb923c;
+  --bg-gray: #f8f9fa;
+}
+
+.client-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: var(--bg-gray);
+  overflow: hidden; /* Tránh scroll body chính */
+}
+
+/* Header */
+.client-header {
+  height: 60px;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  z-index: 100;
+  flex-shrink: 0;
+}
+
+.table-info {
+  font-weight: bold;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.table-badge {
+  background: var(--primary-orange);
+  color: white;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+}
+
+.btn-cart {
+  position: relative;
+  font-size: 1.5rem;
+  color: #555;
+  background: none;
+  border: none;
+}
+
+.cart-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: red;
+  color: white;
+  font-size: 0.7rem;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Container chính chia 2 cột: Sidebar và List món */
+.client-body {
+  display: flex;
+  flex: 1;
+  overflow: hidden; /* Quan trọng để scroll riêng từng phần */
+}
+
+/* Sidebar Danh mục */
+.client-sidebar {
+  width: 80px; /* Nhỏ gọn bên trái */
+  background: white;
+  border-right: 1px solid #eee;
+  overflow-y: auto;
+  flex-shrink: 0;
+}
+
+.cat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 15px 5px;
+  cursor: pointer;
+  border-bottom: 1px solid #f0f0f0;
+  color: #666;
+  transition: all 0.2s;
+  text-align: center;
+}
+
+.cat-item.active {
+  background: #fff7ed;
+  color: var(--primary-orange);
+  border-left: 3px solid var(--primary-orange);
+}
+
+.cat-icon {
+  font-size: 1.5rem;
+  margin-bottom: 5px;
+}
+
+.cat-name {
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* Khu vực hiển thị món ăn */
+.menu-list {
+  flex: 1;
+  padding: 15px;
+  overflow-y: auto;
+  padding-bottom: 80px; /* Chừa chỗ cho nút đặt món nếu có */
+}
+
+.menu-search {
+  margin-bottom: 15px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 10px 15px;
+  border-radius: 25px;
+  border: 1px solid #ddd;
+  background: white;
+  outline: none;
+}
+
+/* Grid sản phẩm */
+.product-grid-client {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 15px;
+}
+
+.product-card-client {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+}
+
+.p-img {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+}
+
+.p-details {
+  padding: 10px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.p-name {
+  font-weight: 600;
+  margin-bottom: 5px;
+  font-size: 0.95rem;
+}
+
+.p-price {
+  color: var(--primary-orange);
+  font-weight: bold;
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.btn-add-cart {
+  background: var(--primary-orange);
+  color: white;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}

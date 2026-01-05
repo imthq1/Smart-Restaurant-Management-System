@@ -10,7 +10,7 @@ import {
   FaCog,
   FaOpencart,
 } from "react-icons/fa";
-
+import { CiViewTable } from "react-icons/ci";
 const Sidebar = () => {
   const location = useLocation();
   const isActive = (path) => {
@@ -41,7 +41,11 @@ const Sidebar = () => {
             <FaHamburger />
           </Link>
         </li>
-
+        <li className={isActive("/admin/table")}>
+          <Link to="/admin/tables">
+            <CiViewTable />
+          </Link>
+        </li>
         <li className="disabled">
           <FaBell />
         </li>

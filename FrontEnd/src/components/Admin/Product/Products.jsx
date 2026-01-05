@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
-  getProducts,
+  getProductsWith,
   deleteProduct,
   updateProduct,
   createProduct,
@@ -47,7 +47,10 @@ const Products = () => {
   const fetchProductData = async () => {
     setLoading(true);
     try {
-      const data = await getProducts();
+      const params = {
+        availableOnly: false,
+      };
+      const data = await getProductsWith(params);
       setProducts(data);
       setError(null);
     } catch (err) {
