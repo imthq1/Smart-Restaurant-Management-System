@@ -39,11 +39,11 @@ public class QRCodeService {
     }
 
      //Generate QR code cho table với URL động
-     public String generateTableQRCode(int QrCode) throws WriterException, IOException {
+     public String generateTableQRCode(int idTable) throws WriterException, IOException {
 
          String qrContent =
                  frontendUrl +
-                         "/menu?table=" + QrCode;
+                         "/menu?table=" + idTable;
 
 
          return generateQRCodeBase64(qrContent, 300, 300);

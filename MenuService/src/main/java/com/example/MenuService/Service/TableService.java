@@ -67,10 +67,10 @@ public class TableService {
         }
 
         String accessToken = securityUtil.createTableAccessToken(
-                table.getId(), session.getId());
+                table.getId(), session.getSessionToken());
 
         String refreshToken = securityUtil.createTableRefreshToken(
-                session.getId());
+                session.getSessionToken());
 
         return new SessionResponse(accessToken, refreshToken);
     }

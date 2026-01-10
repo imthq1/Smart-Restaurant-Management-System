@@ -37,27 +37,21 @@ public class ItemController {
         ItemResponse response = itemService.getItemById(id);
         return ResponseEntity.ok(response);
     }
-
+    @PostMapping("/internal/batch-check")
+    public ResponseEntity<List<ItemResponse>> getProductsByIds(@RequestBody List<Integer> productIds) {
+        return ResponseEntity.ok(itemService.getItemsByIds(productIds));
+    }
     @GetMapping
     public ResponseEntity<List<ItemResponse>> getAllItems(
             @RequestParam(required = false) Integer categoryId,
             @RequestParam(required = false) String search,
-            @RequestParam(defaultValue = "false") boolean availableOnly) {
+            @RequestParam(defaultValue = "true") boolean availableOnly) {
 
-        if (search != null && !search.isEmpty()) {
-            return ResponseEntity.ok(itemService.searchItems(search));
-        }
-
-        if (categoryId != null) {
-            return ResponseEntity.ok(itemService.getItemsByCategory(categoryId));
-        }
-
-        if (availableOnly) {
-            return ResponseEntity.ok(itemService.getAvailableItems());
-        }
-
-        return ResponseEntity.ok(itemService.getAllItems());
+        return ResponseEntity.ok(
+                itemService.getItems(categoryId, search, availableOnly)
+        );
     }
+
 
     @PatchMapping("/{id}/toggle-availability")
     public ResponseEntity<ItemResponse> toggleAvailability(@PathVariable int id) {

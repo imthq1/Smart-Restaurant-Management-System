@@ -35,7 +35,7 @@ public class SecurityUtil {
 
     public SecurityUtil( ) {
     }
-    public String createTableAccessToken(int tableId, int sessionId) {
+    public String createTableAccessToken(int tableId, String sessionId) {
 
         Instant now = Instant.now();
         Instant expiry = now.plus(accessTokenExpiration, ChronoUnit.SECONDS);
@@ -56,7 +56,7 @@ public class SecurityUtil {
         ).getTokenValue();
     }
 
-    public String createTableRefreshToken(int sessionId) {
+    public String createTableRefreshToken(String sessionId) {
 
         Instant now = Instant.now();
         Instant expiry = now.plus(refreshTokenExpiration, ChronoUnit.SECONDS);

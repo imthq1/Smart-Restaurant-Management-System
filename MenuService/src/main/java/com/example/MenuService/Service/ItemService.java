@@ -73,10 +73,24 @@ public class ItemService {
                 .collect(Collectors.toList());
     }
 
+    public List<ItemResponse> getItemsByIds(List<Integer> ids) {
+        List<Item> items = itemRepository.findAllById(ids);
+        return items.stream().map(this::mapToResponse).collect(Collectors.toList());
+    }
     @Transactional(readOnly = true)
     public List<ItemResponse> getAvailableItems() {
         List<Item> items = itemRepository.findByIsAvailableTrue();
         return items.stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+    }
+    public List<ItemResponse> getItems(
+            Integer categoryId,
+            String search,
+            boolean availableOnly) {
+
+        return itemRepository.findItems(categoryId, search, availableOnly)
+                .stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
     }

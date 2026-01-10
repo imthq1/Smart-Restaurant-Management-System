@@ -57,10 +57,10 @@ public class SessionController {
                 });
 
         String accessToken = jwtUtil.createTableAccessToken(
-                table.getId(), session.getId());
+                table.getId(), session.getSessionToken());
 
         String refreshToken = jwtUtil.createTableRefreshToken(
-                session.getId());
+                session.getSessionToken());
 
         return ResponseEntity.ok(
                 new SessionResponse(accessToken, refreshToken)
