@@ -9,7 +9,9 @@ import com.example.MenuService.Domain.Table;
 import com.example.MenuService.Repository.SessionRepository;
 import com.example.MenuService.Repository.TableRepository;
 
+import com.example.MenuService.Service.TableService;
 import com.example.MenuService.Util.Enum.SessionStatus;
+import com.example.MenuService.Util.Enum.StatusTable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +31,7 @@ public class SessionController {
 
     private final TableRepository tableRepository;
     private final SessionRepository sessionRepository;
+    private final TableService tableService;
     private final SecurityUtil jwtUtil;
 
     /**
@@ -51,7 +54,7 @@ public class SessionController {
                     s.setStatus(SessionStatus.ACTIVE);
                     sessionRepository.save(s);
 
-                    table.setStatus("OCCUPIED");
+                    table.setStatusTable(StatusTable.OCCUPIED);
                     tableRepository.save(table);
                     return s;
                 });
@@ -66,6 +69,7 @@ public class SessionController {
                 new SessionResponse(accessToken, refreshToken)
         );
     }
+
 
 //    /**
 //     * Token hết hạn → refresh để order tiếp
@@ -106,7 +110,7 @@ public class SessionController {
         sessionRepository.save(session);
 
         Table table = session.getTable();
-        table.setStatus("AVAILABLE");
+        table.setStatusTable(StatusTable.AVAILABLE);
         tableRepository.save(table);
 
         return ResponseEntity.ok().build();

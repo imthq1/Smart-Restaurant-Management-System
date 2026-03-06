@@ -1,5 +1,6 @@
 package com.example.MenuService.Domain;
 
+import com.example.MenuService.Util.Enum.StatusTable;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -35,12 +36,12 @@ public class Table {
     @Column(nullable = false)
     private int capacity;
 
-    @Column(nullable = false)
-    private String status; // AVAILABLE, OCCUPIED, RESERVED, CLEANING
+
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
-
+    @Enumerated(EnumType.STRING)
+    private StatusTable statusTable;
     // Relationship: One Table has Many Sessions
     // cascade = CascadeType.ALL: Khi xóa Table thì xóa tất cả Sessions liên quan
     // orphanRemoval = true: Khi remove session khỏi list thì tự động xóa trong DB
@@ -52,9 +53,6 @@ public class Table {
     @PrePersist
     protected void onCreate() {
         createdAt = Instant.now();
-        if (status == null) {
-            status = "AVAILABLE";
-        }
     }
     public void addSession(Session session) {
         sessions.add(session);

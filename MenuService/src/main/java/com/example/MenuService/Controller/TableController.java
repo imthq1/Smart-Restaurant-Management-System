@@ -3,14 +3,17 @@ package com.example.MenuService.Controller;
 
 import com.example.MenuService.Domain.ReqDTO.TableRequest;
 import com.example.MenuService.Domain.ResDTO.TableResponse;
+import com.example.MenuService.Domain.Session;
 import com.example.MenuService.Service.TableService;
 import com.google.zxing.WriterException;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
+
 
 @RestController
 @RequestMapping("/api/v1/tables")
@@ -25,7 +28,14 @@ public class TableController {
         TableResponse response = tableService.createTable(request);
         return ResponseEntity.ok(response);
     }
-
+    @GetMapping("/getActiveSession/{tableId}")
+    public ResponseEntity<Session> getActive(@PathVariable int tableId){
+        Session session=tableService.getActiveSessionByTable(tableId).orElse(null);
+        if(session==null){
+            return ResponseEntity.notFound().build();
+        }
+        return  ResponseEntity.ok(session);
+    }
     @PostMapping("/qr-code")
     public ResponseEntity<TableResponse> generateNewQRCode(@RequestParam(name = "idTable") int idTable)
             throws WriterException, IOException {
@@ -47,7 +57,7 @@ public class TableController {
         return ResponseEntity.ok(tables);
     }
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTable(@PathVariable int id){
+    public ResponseEntity<Void> deleteTable(@PathVariable Integer id){
         tableService.deleteTable(id);
         return ResponseEntity.noContent().build();
     }

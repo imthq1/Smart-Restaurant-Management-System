@@ -10,6 +10,7 @@ import com.example.MenuService.Domain.Table;
 import com.example.MenuService.Repository.SessionRepository;
 import com.example.MenuService.Repository.TableRepository;
 import com.example.MenuService.Util.Enum.SessionStatus;
+import com.example.MenuService.Util.Enum.StatusTable;
 import com.google.zxing.WriterException;
 
 import lombok.RequiredArgsConstructor;
@@ -35,7 +36,7 @@ public class TableService {
         Table table = new Table();
         table.setNumberTable(request.getNumberTable());
         table.setCapacity(request.getCapacity());
-        table.setStatus("AVAILABLE");
+        table.setStatusTable(StatusTable.AVAILABLE);
         Table savedTable = tableRepository.save(table);
 
         return mapToResponse(savedTable);
@@ -62,7 +63,7 @@ public class TableService {
             session.setStatus(SessionStatus.ACTIVE);
             sessionRepository.save(session);
 
-            table.setStatus("OCCUPIED");
+            table.setStatusTable(StatusTable.OCCUPIED);
             tableRepository.save(table);
         }
 
@@ -115,10 +116,14 @@ public class TableService {
         response.setId(table.getId());
         response.setNumberTable(table.getNumberTable());
         response.setCapacity(table.getCapacity());
-        response.setStatus(table.getStatus());
+        response.setStatus(table.getStatusTable());
         response.setQrCode(table.getQrCode());
         response.setCreatedAt(table.getCreatedAt());
 
         return response;
     }
+    public Optional<Session> getActiveSessionByTable(int tableId) {
+        return sessionRepository.findActiveSessionByTable(tableId, SessionStatus.ACTIVE);
+    }
+
 }
