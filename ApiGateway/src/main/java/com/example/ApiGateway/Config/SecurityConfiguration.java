@@ -49,10 +49,7 @@ public class SecurityConfiguration {
     @Bean
     public GlobalFilter userHeaderFilter(ReactiveJwtDecoder reactiveJwtDecoder) {
         return (exchange, chain) -> {
-
-            String authHeader = exchange.getRequest()
-                    .getHeaders()
-                    .getFirst(HttpHeaders.AUTHORIZATION);
+            String authHeader = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
 
             if (authHeader == null || !authHeader.startsWith("Bearer ")) {
                 return chain.filter(exchange);
@@ -62,20 +59,27 @@ public class SecurityConfiguration {
 
             return reactiveJwtDecoder.decode(token)
                     .flatMap(jwt -> {
-                        String email = jwt.getSubject();
+                        Object tableId = jwt.getClaims().get("tableId");
+                        Object role = jwt.getClaims().get("role");
+                        Object sessionId = jwt.getClaims().get("sessionId");
 
-                        ServerHttpRequest request = exchange.getRequest()
-                                .mutate()
-                                .header("X-User-Email", email)
-                                .build();
+                        ServerHttpRequest.Builder requestBuilder = exchange.getRequest().mutate();
 
-                        return chain.filter(
-                                exchange.mutate().request(request).build()
-                        );
+                        if (tableId != null) {
+                            requestBuilder.header("X-Table-Id", String.valueOf(tableId));
+                        }
+                        if (role != null) {
+                            requestBuilder.header("X-Role", String.valueOf(role));
+                        }
+                        if (sessionId != null) {
+                            requestBuilder.header("X-Session-Id", String.valueOf(sessionId));
+                        }
+
+                        ServerHttpRequest request = requestBuilder.build();
+                        return chain.filter(exchange.mutate().request(request).build());
                     });
         };
     }
-
     @Bean
     public ReactiveJwtDecoder reactiveJwtDecoder() {
 
@@ -96,20 +100,23 @@ public class SecurityConfiguration {
     }
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
-
         return http
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
-                .cors(Customizer.withDefaults())
+                .cors(ServerHttpSecurity.CorsSpec::disable)
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint(authenticationEntryPoint)
                 )
                 .authorizeExchange(exchange -> exchange
                         .pathMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .pathMatchers(HttpMethod.GET, "/api/v1/categories").permitAll()
                         .pathMatchers(
                                 "/api/v1/auth/login",
-                                "/api/v1/auth/register"
+                                "/api/v1/auth/register",
+                                "/api/v1/sessions/open"
                         ).permitAll()
-
+                        // ← QUAN TRỌNG: Cho phép TẤT CẢ method cho /ws/**
+                        .pathMatchers("/ws/**").permitAll()
+                        .pathMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .anyExchange().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 ->
@@ -117,6 +124,5 @@ public class SecurityConfiguration {
                 )
                 .build();
     }
-
 }
 
