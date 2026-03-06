@@ -21,9 +21,11 @@ import Categories from "./components/Admin/Product/Categories";
 import TablePage from "./pages/admin/TablePage";
 import MenuPage from "./pages/client/MenuPage";
 import CartPage from "./components/Client/CartPage";
-import OrderPage from "./components/Admin/order/order";
+import TableManagement from "./components/Admin/order/TableManagement";
 import OrderManagement from "./components/Admin/order/OrderManagement";
 import CalendarPage from "./pages/admin/CalendarPage";
+import KitchenOrder from "./components/Admin/order/KitchenOrder";
+
 function App() {
   return (
     <AuthProvider>
@@ -39,7 +41,8 @@ function App() {
             <Route path="products" element={<Products />} />
             <Route path="categories" element={<Categories />} />
             <Route path="tables" element={<TablePage />} />
-            <Route path="kitchens" element={<OrderPage />} />
+            <Route path="kitchens" element={<TableManagement />} />
+            <Route path="kitchenOrder" element={<KitchenOrder />} />
             <Route path="calendars" element={<CalendarPage />} />
           </Route>
 

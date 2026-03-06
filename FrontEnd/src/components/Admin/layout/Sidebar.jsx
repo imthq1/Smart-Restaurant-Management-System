@@ -4,7 +4,7 @@ import {
   FaThLarge,
   FaClipboardList,
   FaHamburger,
-  FaUser,
+  FaUtensils,
   FaBell,
   FaPaperPlane,
   FaCog,
@@ -50,13 +50,13 @@ const Sidebar = () => {
         </li>
         <li className={isActive("/admin/kitchens")}>
           <Link to="/admin/kitchens">
-            <FaBell />
+            <FaUtensils />
           </Link>
         </li>
 
-        <li className={isActive("/admin/users")}>
-          <Link to="/admin/users">
-            <FaUser />
+        <li className={isActive("/admin/kitchenOrder")}>
+          <Link to="/admin/kitchenOrder">
+            <FaBell />
           </Link>
         </li>
         <li className={isActive("/admin/orders")}>

@@ -15,6 +15,34 @@ export const createOrder = async (cartItems) => {
     throw error.response?.data?.message || "Đặt món thất bại";
   }
 };
+export const getTableOrderDetails = async (tableId) => {
+  try {
+    const response = await axiosClient.get(`/api/v1/orders/table/${tableId}`);
+    return response.data.data;
+  } catch (error) {
+    throw error.response?.data?.message || "Lỗi lấy chi tiết order của bàn";
+  }
+};
+
+export const updateOrderItemQuantity = async (itemId, quantity) => {
+  try {
+    const response = await axiosClient.put(`/api/v1/orders/items/${itemId}`, {
+      quantity,
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response?.data?.message || "Lỗi cập nhật số lượng món";
+  }
+};
+
+export const deleteOrderItem = async (itemId) => {
+  try {
+    const response = await axiosClient.delete(`/api/v1/orders/items/${itemId}`);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data?.message || "Lỗi xóa món ăn";
+  }
+};
 export const getOrders = async (params) => {
   let url = `/api/v1/orders`;
   const configParams = { ...params };

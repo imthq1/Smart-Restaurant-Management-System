@@ -8,11 +8,20 @@ export const getKitchenOrders = async () => {
     throw error.response?.data?.message || "Lỗi tải danh sách order";
   }
 };
+export const getOrderItems = async (orderId) => {
+  try {
+    const response = await axiosClient.get(`/api/v1/orders/${orderId}/items`);
 
-export const updateOrderStatus = async (kitchenOrderId, status) => {
+    return response.data.data;
+  } catch (error) {
+    console.error(`Lỗi tải items cho order ${orderId}:`, error);
+    return [];
+  }
+};
+export const updateOrderStatus = async (orderId, status) => {
   try {
     const response = await axiosClient.put(
-      `/api/v1/kitchens/setStatusOrder/${kitchenOrderId}`,
+      `/api/v1/kitchens/setStatusOrder/${orderId}`,
       status,
       {
         headers: {
