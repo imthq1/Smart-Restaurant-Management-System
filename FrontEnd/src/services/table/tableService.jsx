@@ -13,7 +13,16 @@ export const getTables = async () => {
     throw error.response?.data?.message || "Lỗi lấy danh sách bàn";
   }
 };
-
+export const getActiveSessionByTable = async (idTable) => {
+  try {
+    const response = await axiosClient.get(
+      `/api/v1/tables/getActiveSession/${idTable}`,
+    );
+    return response.data;
+  } catch (error) {
+    throw error.response?.data?.message;
+  }
+};
 export const createTable = async (data) => {
   try {
     const payload = {
