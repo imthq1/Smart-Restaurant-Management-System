@@ -1,4 +1,4 @@
-package com.example.OrderService.Domain.ResDTO;
+package com.example.KitchenService.Domain.Res;
 
 
 public class RestResponse<T> {

@@ -1,7 +1,7 @@
-package com.example.OrderService.Util;
+package com.example.KitchenService.Util;
 
 
-import com.example.OrderService.Domain.ResDTO.RestResponse;
+import com.example.KitchenService.Domain.Res.RestResponse;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;

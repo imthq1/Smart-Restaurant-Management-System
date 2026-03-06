@@ -16,6 +16,5 @@ public class KitchenOrderWsDto {
     private Integer tableId;
     private String sessionId;
     private KitchenOrderStatus status;
-    private List<KitchenOrderItemWsDto> items;
     private LocalDateTime createdAt;
 }

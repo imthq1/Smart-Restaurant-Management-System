@@ -39,11 +39,5 @@ public class KitchenOrder {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    @OneToMany(
-            mappedBy = "kitchenOrder",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
-    @JsonManagedReference
-    private List<KitchenOrderItem> items = new ArrayList<>();
+
 }

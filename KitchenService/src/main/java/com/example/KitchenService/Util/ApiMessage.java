@@ -1,4 +1,4 @@
-package com.example.OrderService.Util;
+package com.example.KitchenService.Util;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

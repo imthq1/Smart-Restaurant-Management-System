@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface KitchenOrderRepository extends JpaRepository<KitchenOrder, Long> {
+public interface KitchenOrderRepository extends JpaRepository<KitchenOrder, Integer> {
     List<KitchenOrder> findByStatusOrderByCreatedAtAsc(KitchenOrderStatus status);
 }

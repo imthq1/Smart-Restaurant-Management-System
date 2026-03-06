@@ -1,6 +1,5 @@
 package com.example.KitchenService.Service.Websocket;
 
-import com.example.KitchenService.Domain.DTO.KitchenOrderItemWsDto;
 import com.example.KitchenService.Domain.DTO.KitchenOrderWsDto;
 import com.example.KitchenService.Domain.KitchenOrder;
 import lombok.RequiredArgsConstructor;
@@ -26,17 +25,6 @@ public class KitchenWebSocketPublisher {
                 .sessionId(order.getSessionId())
                 .status(order.getStatus())
                 .createdAt(order.getCreatedAt())
-                .items(order.getItems().stream()
-                        .map(i -> KitchenOrderItemWsDto.builder()
-                                .id(i.getId())
-                                .orderItemId(i.getOrderItemId())
-                                .menuItemId(i.getMenuItemId())
-                                .menuItemName(i.getMenuItemName())
-                                .quantity(i.getQuantity())
-                                .note(i.getNote())
-                                .status(i.getStatus())
-                                .build())
-                        .toList())
                 .build();
     }
 }
