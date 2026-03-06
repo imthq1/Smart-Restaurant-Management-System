@@ -1,13 +1,12 @@
 package com.example.KitchenService.Controller;
 
 import com.example.KitchenService.Domain.KitchenOrder;
+import com.example.KitchenService.Domain.Res.OrderRes.OrderItemResponse;
 import com.example.KitchenService.Service.KitchenService;
 import com.example.KitchenService.Util.KitchenOrderStatus;
 import jakarta.persistence.Table;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,13 +18,24 @@ public class KitchenController {
         this.kitchenService = kitchenService;
     }
     @GetMapping("/orders")
-    public List<KitchenOrder> getOrders(
+    public ResponseEntity<List<KitchenOrder>> getOrders(
             @RequestParam(required = false) KitchenOrderStatus status
     ) {
         if (status == null) {
-            return kitchenService.getActiveOrders();
+            return ResponseEntity.ok(kitchenService.getActiveOrders());
         }
-        return kitchenService.getActiveOrdersByStatus(status);
+        return ResponseEntity.ok(kitchenService.getActiveOrdersByStatus(status));
+    }
+    @GetMapping("/kitchen/{orderId}/items")
+    public List<OrderItemResponse> getKitchenItems(@PathVariable int orderId) {
+        return kitchenService.getItemsFromOrder(orderId);
+    }
+    @PutMapping("/setStatusOrder/{orderId}")
+    public void setStatusOrder(
+            @PathVariable Integer orderId,
+            @RequestBody KitchenOrderStatus status
+    ) {
+        kitchenService.statusOrder(orderId, status);
     }
 
 }
