@@ -14,6 +14,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Integer> {
@@ -33,4 +34,11 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
         SELECT SUM(o.totalAmount) FROM Order o
     """)
     BigDecimal totalRevenue();
+
+    List<Order> findBySessionIdAndStatus(
+            String sessionId,
+            OrderStatus status
+    );
+    List<Order> findByTableIdAndStatus(int tableId, OrderStatus status);
+    Optional<Order> findByIdAndSessionId(int id, String sessionId);
 }

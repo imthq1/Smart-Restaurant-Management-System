@@ -19,12 +19,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -46,7 +50,7 @@ public class OrderService {
         // 1. Lấy danh sách ID sản phẩm từ request của khách
         List<Integer> productIds = request.getItems().stream()
                 .map(OrderItemRequest::getProductId)
-                .distinct() // Loại bỏ ID trùng lặp để tối ưu request
+                .distinct()
                 .collect(Collectors.toList());
 
         if (productIds.isEmpty()) {
@@ -113,6 +117,108 @@ public class OrderService {
         orderEventProducer.publishOrderCreated(savedOrder);
         return savedOrder;
     }
+    public OrderTableResponse getPendingItemsByTable(int tableId) {
+
+        List<Order> orders = orderRepository
+                .findByTableIdAndStatus(tableId, OrderStatus.COMPLETED);
+
+        // Lấy tất cả orderItems từ các orders
+        List<OrderItemResponse> items = orders.stream()
+                .flatMap(order -> order.getOrderItems().stream())
+                .map(item -> OrderItemResponse.builder()
+                        .id(item.getId())
+                        .status(item.getStatus().name())
+                        .productId(item.getProductId())
+                        .productName(item.getProductName())
+                        .price(item.getPrice())
+                        .quantity(item.getQuantity())
+                        .note(item.getNote())
+                        .subTotal(item.getSubTotal())
+                        .build())
+                .toList();
+
+        // tính tổng tiền
+        BigDecimal totalAmount = items.stream()
+                .map(OrderItemResponse::getSubTotal)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        return OrderTableResponse.builder()
+                .items(items)
+                .totalAmount(totalAmount)
+                .build();
+    }
+    public void updateQuantity(Integer itemId, int quantity) {
+
+        OrderItem item = orderItemRepository.findById(itemId)
+                .orElseThrow();
+
+        if(quantity <= 0){
+            orderItemRepository.delete(item);
+        }else{
+            item.setQuantity(quantity);
+            orderItemRepository.save(item);
+        }
+    }
+    public void deleteItem(Integer itemId) {
+        OrderItem item = orderItemRepository.findById(itemId)
+                .orElseThrow();
+        orderItemRepository.delete(item);
+    }
+    public BillResponse getBillBySession(String sessionId) {
+        List<Order> orders = orderRepository
+                .findBySessionIdAndStatus(sessionId, OrderStatus.PENDING);
+
+        if (orders.isEmpty()) {
+            throw new RuntimeException("No active order for this session");
+        }
+
+        int tableId = orders.get(0).getTableId();
+
+        List<BillItemResponse> items = new ArrayList<>();
+        BigDecimal total = BigDecimal.ZERO;
+
+        Map<String, BillItemResponse> billMap = new LinkedHashMap<>();
+
+        for (Order order : orders) {
+            for (OrderItem item : order.getOrderItems()) {
+
+                if (item.getStatus() != OrderItemStatus.DONE) continue;
+
+                String key = item.getProductName();
+
+                BigDecimal subTotal = item.getPrice()
+                        .multiply(BigDecimal.valueOf(item.getQuantity()));
+
+                billMap.compute(key, (k, v) -> {
+                    if (v == null) {
+                        return BillItemResponse.builder()
+                                .productName(item.getProductName())
+                                .price(item.getPrice())
+                                .quantity(item.getQuantity())
+                                .subTotal(subTotal)
+                                .build();
+                    } else {
+                        v.setQuantity(v.getQuantity() + item.getQuantity());
+                        v.setSubTotal(v.getSubTotal().add(subTotal));
+                        return v;
+                    }
+                });
+
+                total = total.add(subTotal);
+            }
+        }
+
+        items = new ArrayList<>(billMap.values());
+
+
+        return BillResponse.builder()
+                .sessionId(sessionId)
+                .tableId(tableId)
+                .items(items)
+                .totalAmount(total)
+                .createdAt(LocalDateTime.now())
+                .build();
+    }
     public OrderDashboardSummary getDashboardSummary() {
         return new OrderDashboardSummary(
                 orderRepository.countTotalOrders(),
@@ -122,7 +228,25 @@ public class OrderService {
         );
     }
 
+    public List<OrderItemResponse> getItemsByOrderId(int orderId) {
 
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+
+        return order.getOrderItems()
+                .stream()
+                .map(item -> OrderItemResponse.builder()
+                        .id(item.getId())
+                        .productId(item.getProductId())
+                        .productName(item.getProductName())
+                        .quantity(item.getQuantity())
+                        .price(item.getPrice())
+                        .status(item.getStatus().name())
+                        .note(item.getNote())
+                        .subTotal(item.getSubTotal())
+                        .build())
+                .toList();
+    }
     public PageResponse<OrderResponse> getOrders(
             OrderStatus status,
             int page,

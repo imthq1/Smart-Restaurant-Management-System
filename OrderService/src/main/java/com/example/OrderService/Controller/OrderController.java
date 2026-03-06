@@ -1,10 +1,10 @@
 package com.example.OrderService.Controller;
 
 import com.example.OrderService.Domain.Order;
+import com.example.OrderService.Domain.OrderItem;
 import com.example.OrderService.Domain.ReqDTO.OrderRequest;
-import com.example.OrderService.Domain.ResDTO.OrderDashboardSummary;
-import com.example.OrderService.Domain.ResDTO.OrderResponse;
-import com.example.OrderService.Domain.ResDTO.PageResponse;
+import com.example.OrderService.Domain.ReqDTO.UpdateQuantityRequest;
+import com.example.OrderService.Domain.ResDTO.*;
 import com.example.OrderService.Service.OrderService;
 import com.example.OrderService.Util.Enum.OrderStatus;
 import com.example.OrderService.Util.Enum.TimeFilter;
@@ -32,11 +32,41 @@ public class OrderController {
         Order newOrder = orderService.createOrder(tableId, sessionId, request);
         return ResponseEntity.ok(newOrder);
     }
+    @GetMapping("/billing/session/{sessionId}")
+    public ResponseEntity<BillResponse> getBill(@PathVariable String sessionId) {
+        return ResponseEntity.ok(orderService.getBillBySession(sessionId));
+    }
+    @PutMapping("/items/{itemId}")
+    public ResponseEntity<?> updateQuantity(
+            @PathVariable Integer itemId,
+            @RequestBody UpdateQuantityRequest request) {
+
+        orderService.updateQuantity(itemId, request.getQuantity());
+
+        return ResponseEntity.ok("Updated");
+    }
+    @DeleteMapping("/items/{itemId}")
+    public ResponseEntity<?> deleteItem(@PathVariable Integer itemId) {
+
+        orderService.deleteItem(itemId);
+
+        return ResponseEntity.ok("Deleted");
+    }
+    @GetMapping("/table/{tableId}")
+    public ResponseEntity<OrderTableResponse> getItemsByTable(@PathVariable int tableId) {
+
+        return ResponseEntity.ok(
+                orderService.getPendingItemsByTable(tableId)
+        );
+    }
     @GetMapping("/dashboard/summary")
     public ResponseEntity<OrderDashboardSummary> dashboardSummary() {
         return ResponseEntity.ok(orderService.getDashboardSummary());
     }
-
+    @GetMapping("/{orderId}/items")
+    public ResponseEntity<List<OrderItemResponse>> getOrderItems(@PathVariable int orderId) {
+        return ResponseEntity.ok(orderService.getItemsByOrderId(orderId));
+    }
     @GetMapping
     public ResponseEntity<PageResponse<OrderResponse>> getOrders(
             @RequestParam(required = false) OrderStatus status,
