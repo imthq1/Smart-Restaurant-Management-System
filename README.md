@@ -1,4 +1,4 @@
-# Smart Restaurant - QR-Based Self-Ordering System
+# QROrder Microservices Ecosystem
 
 A high-performance, event-driven Microservices system designed for modern smart restaurants. This application enables customers to scan a **table-specific QR code** to browse the menu and place orders, with **real-time updates** on their order status.
 
