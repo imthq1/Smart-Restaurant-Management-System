@@ -5,7 +5,8 @@ A high-performance, event-driven Microservices system designed for modern smart 
 ---
 ## System Architecture
 
-<img width="658" height="796" alt="image" src="https://github.com/user-attachments/assets/d12a8656-701e-47bf-821f-946dd8a4e585" />
+<img width="588" height="692" alt="image" src="https://github.com/user-attachments/assets/864507c6-210f-4053-bcc5-4bbf3dd64bcc" />
+
 
 *Overview of the microservices ecosystem and inter-service communication.*
 
