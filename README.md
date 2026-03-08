@@ -70,7 +70,7 @@ Centralized planning for restaurant activities.
 
 | Service | Primary Responsibility | Tech/Storage |
 | :--- | :--- | :--- |
-| **Identity Service** | RBAC, JWT Authentication & User Sessions. | MySQL |
+| **Identity Service** | JWT Authentication & User Sessions. | MySQL |
 | **Menu Service** | Digital Menu & **Table/QR Code Management**. | MySQL |
 | **Order Service** | Transactional logic and order lifecycle. | MySQL |
 | **Kitchen Service** | Order preparation workflow & Chef UI. | MySQL, WebSocket |
